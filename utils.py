@@ -18,20 +18,22 @@ class SurfaceSmoothnessSuggestor():
         if self.layer_thickness in [0.1, 0.2, 0.3]:
             extracted_data = self.data[self.data['Layer_thickness'] == self.layer_thickness]
         else:
-            return 'Improper Layer Thickness.'
+            return (0, 'Improper Layer Thickness.')
         extracted_data.drop(['Time', 'Layer_thickness', 'Raw_Value'], axis = 1, inplace = True)
         extracted_data = extracted_data.values.tolist()
         extracted_data = functools.reduce(operator.iconcat, extracted_data, [])
 
-        if self.raw_value > self.surface_smoothness:    
+        if self.raw_value > self.surface_smoothness:
             result_value = [index for index, value in enumerate(extracted_data) if self.surface_smoothness <= value and self.raw_value > value] 
         else:
-            return 'Improper Smoothness Value.'
-
-        result = []
-        for index in result_value:
-            result.append(self.sp_gridsize[index])
-        return self.message(list(map(str, result)))
+            return (0, 'Already smoothened.')
+        if result_value:
+            result = []
+            for index in result_value:
+                result.append(self.sp_gridsize[index])
+            return self.message(list(map(str, result)))
+        else:
+            return(0, 'Improper Smoothness Value.')
     
     def message(self, result):
         if len(result) == 0:

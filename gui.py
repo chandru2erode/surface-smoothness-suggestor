@@ -18,7 +18,6 @@ window = sg.Window('Surface Smoothness Suggestor', layout, size=(435,325))
 
 while True:
     event, values = window.Read()
-    print(values)
     suggestor = SurfaceSmoothnessSuggestor(float(values[2]), float(values[3]), float(values[4]))
     sanding_time, message = suggestor.extract()
 
